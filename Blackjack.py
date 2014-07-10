@@ -76,7 +76,7 @@ class Hand:
 		returnString += " for a total of " + str(self.total)
 		return returnString
 class Player:
-	def __init__(self, startingCash=100, name= "Micky Rosa"):
+	def __init__(self, startingCash=100, name= "Random Player"):
 		self.cash = startingCash
 		self.name = name
 
@@ -87,13 +87,13 @@ class Player:
 		return self.name
 
 	def setBet(self, value):
-		if value <= self.cash:
+		if value <= self.cash and value > 0:
 			self.bet = value
 			return
 		else:
 			print value < self.cash
-			print "You don't have enough money to make a bet that big"
-			print self.cash
+			print "Either you don't have enough money to place a bet that big, or your bet must be a positive number" 
+			print "Cash remaining: ", self.cash
 			newBet = int(raw_input("Enter a smaller bet value"))
 			self.setBet(newBet)
 
@@ -120,17 +120,23 @@ class Player:
 
 
 class BlackJack:
-	def __init__(self, numPlayers=1, numDecks = 1):
+	def __init__(self, numPlayers=1, numDecks = 1, playerNames = None):
 		self.gameDeck = Deck(numDecks)
 		self.playerList = []
 		for player in range(numPlayers):
-			self.playerList += [Player()]
+			playerName = raw_input("What is your name?\n")
+			self.playerList += [Player(100,playerName )]
 		#start the dealer off with 1 million bucks
 		self.Dealer = Player(startingCash =10**6)
 
 	def dealHand(self):
 		for player in self.playerList:
-			betSize = int(raw_input("How much would you like to bet, " + str(player)  + "?\n"))
+			while True:
+				try:
+					betSize = int(raw_input("How much would you like to bet, " + str(player)  + "?\n"))
+					break
+				except:
+					print "please enter a valid bet size"
 			player.setBet(betSize)
 			player.setHand(self.gameDeck.dealTop(), self.gameDeck.dealTop())
 
@@ -155,11 +161,13 @@ class BlackJack:
 						player.hit(newCard)
 						if player.getHandValue() == 21:
 							print "You hit 21 and will (probably) win"
-							break
+							stand = True
+							notBusted += [player]
 						if player.getHandValue() > 21:
-							print "You busted and you lose"
 							player.cash -= player.bet
 							self.Dealer.cash += player.bet
+							print "You busted and you lose"
+							player.displayMoney()
 							if player.cash == 0:
 								print "you have no money left"
 								toRemove += [player]
@@ -172,10 +180,14 @@ class BlackJack:
 				self.Dealer.cash -= 3.0/2*player.bet
 				player.cash += 3.0/2*player.bet
 				player.displayMoney()
+		print "-" * 40
 		dealerBusts = False
 		if notBusted != []:
+			print "Dealer's Starting Hand", self.Dealer.hand
 			while self.Dealer.getHandValue() < 17:
-				self.Dealer.hit(self.gameDeck.dealTop())
+				dealerHit = self.gameDeck.dealTop()
+				print "The dealer hit and got a ", dealerHit
+				self.Dealer.hit(dealerHit)
 				if self.Dealer.getHandValue() > 21:
 					print "The dealer busts, everybody in wins"
 					for player in notBusted:
@@ -203,6 +215,9 @@ class BlackJack:
 				player.displayMoney()
 		for p in toRemove:
 			self.playerList.remove(p)
+		if self.playerList == []:
+			print "No player's left; The game is over"
+			exit()
 		print "-"*100
 	def displayPlayerTotals(self):
 		for player in self.playerList:
@@ -213,7 +228,9 @@ class BlackJack:
 
 if __name__ == "__main__":
 	B = BlackJack(1)
-	while(raw_input("Do you want to play?")):
+	play = raw_input("Do you want to play?")
+	while(play[0] != 'N' and play[0] != 'n'):
 		B.playGame()
+		play = raw_input("Do you want to play again?")
 	B.displayPlayerTotals()
 	print "Thanks for Playing"

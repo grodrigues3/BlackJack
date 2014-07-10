@@ -87,7 +87,7 @@ class Player:
 		return self.name
 
 	def setBet(self, value):
-		if value <= self.cash and value > 0:
+		if value <= self.cash and value >= 1:
 			self.bet = value
 			return
 		else:

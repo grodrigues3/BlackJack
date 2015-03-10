@@ -133,7 +133,7 @@ class BlackJack:
 		for player in self.playerList:
 			while True:
 				try:
-					betSize = int(raw_input("How much would you like to bet, " + str(player)  + "?\n"))
+					betSize = int(raw_input("How much would you like to bet, {0}?  You have {1} available. \n".format( player, player.cash)))
 					break
 				except:
 					print "please enter a valid bet size"

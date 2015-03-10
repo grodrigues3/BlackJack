@@ -11,3 +11,7 @@ Dependencies:
 Running Instructions:
 
 $ python Blackjack.py
+
+To kill the program Ctrl-C or Ctrl-z.
+
+

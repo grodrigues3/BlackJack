@@ -1,4 +1,13 @@
 BlackJack
-=========
+Author: Garrett Rodrigues
+=============
 
-A super simple blackjack implementation.  No splitting, double downs etc for now; Also no GUI :( 
+A simple blackjack implementation.
+
+Dependencies:
+    Python 2.74
+    No external modules
+
+Running Instructions:
+
+$ python Blackjack.py

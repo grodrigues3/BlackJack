@@ -152,7 +152,7 @@ class BlackJack:
 			if player.getHandValue() < 21:
 				stand = False
 				busted = False
-				while(True and not busted and not stand):
+                                while(not (busted or stand)):
 					display = "You are at " + str(player.getHandValue()) +". Would you like to hit? (y/n)"
 					hit_stand = raw_input(display)
 					if hit_stand == 'y' or hit_stand == 'Y':
